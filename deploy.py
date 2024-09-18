@@ -61,8 +61,10 @@ chain_id = 1337
 # #Added print statement to ensure connection suceeded as per
 # #https://web3py.readthedocs.io/en/stable/middleware.html#geth-style-proof-of-authority
 
-my_address = "0x7355E26190bF51D607B2f86a24078Acf005AcbB4"
-private_key = os.getenv("PRIVATE_KEY")
+my_address = "0x202AE94af10DDeB0940421c27Ad56d7c03207eF2"
+#testing only
+private_key = "0xa88def0b9aea1fe0d274e7754ec46e8ad8503b65bed382b584eecae821dd3301"
+#private_key = os.getenv("PRIVATE_KEY")
 
 # Create the contract in Python
 SimpleStorage = w3.eth.contract(abi=abi, bytecode=bytecode)
@@ -93,20 +95,20 @@ print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
 simple_storage = w3.eth.contract(address=tx_receipt.contractAddress, abi=abi)
 # Call = simulate the call getting a return value
 # Transact = Make state change
-# print(f"Initial Stored Value {simple_storage.functions.retrieve().call()}")
-# greeting_transaction = simple_storage.functions.store(15).build_transaction(
-#     {
-#         "chainId": chain_id,
-#         "gasPrice": w3.eth.gas_price,
-#         "from": my_address,
-#         "nonce": nonce + 1,
-#     }
-# )
-# signed_greeting_txn = w3.eth.account.sign_transaction(
-#     greeting_transaction, private_key=private_key
-# )
-# tx_greeting_hash = w3.eth.send_raw_transaction(signed_greeting_txn.rawTransaction)
-# print("Updating stored Value...")
-# tx_receipt = w3.eth.wait_for_transaction_receipt(tx_greeting_hash)
+print(f"Initial Stored Value {simple_storage.functions.retrieve().call()}")
+greeting_transaction = simple_storage.functions.store(15).build_transaction(
+    {
+        "chainId": chain_id,
+        "gasPrice": w3.eth.gas_price,
+        "from": my_address,
+        "nonce": nonce + 1,
+    }
+)
+signed_greeting_txn = w3.eth.account.sign_transaction(
+    greeting_transaction, private_key=private_key
+)
+tx_greeting_hash = w3.eth.send_raw_transaction(signed_greeting_txn.raw_transaction)
+print("Updating stored Value...")
+tx_receipt = w3.eth.wait_for_transaction_receipt(tx_greeting_hash)
 
-# print(simple_storage.functions.retrieve().call())
+print(simple_storage.functions.retrieve().call())
